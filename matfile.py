@@ -25,5 +25,3 @@ class MatFile(yaml.YAMLObject):
 				(name, mapDef) = mapping.popitem()
 				newDef = {'first': {'name': name}, 'second': mapDef}
 				newMapList.append(newDef)
-
-		
