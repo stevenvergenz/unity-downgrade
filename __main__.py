@@ -2,8 +2,11 @@ import sys, yaml
 import matfile
 
 def main(args):
+	rewriteMaterial(args[-2], args[-1])
 
-	with open(args[-2], 'r') as fp:
+def rewriteMaterial(infile, outfile):
+
+	with open(infile, 'r') as fp:
 		rawinput = fp.readlines()
 
 	data = yaml.load(''.join(rawinput))
@@ -18,7 +21,7 @@ def main(args):
 		if line[0:3] == '---':
 			break
 	
-	with open(args[-1], 'w') as fp:
+	with open(outfile, 'w') as fp:
 		fp.write(origHeader+newBody)
 
 
