@@ -21,6 +21,7 @@ def main(args):
 
 		elif filename.endswith('.png.meta') or filename.endswith('.jpg.meta'):
 			print('Tex Meta: '+filename)
+			rewriteTexMeta(filename)
 
 
 def rewriteMaterial(filename):
@@ -40,8 +41,31 @@ def rewriteMaterial(filename):
 		if line[0:3] == '---':
 			break
 	
-	with open(filename, 'w') as fp:
-		fp.write(origHeader+newBody)
+	answer = None
+	while answer not in ['','y','n']:
+		answer = input('Overwrite {0}? [y/N] '.format(filename))
+
+	if answer == 'y':
+		with open(filename, 'w') as fp:
+			fp.write(origHeader+newBody)
+
+
+def rewriteTexMeta(filename):
+
+	with open(filename, 'r') as fp:
+		rawinput = fp.readlines()
+
+	data = yaml.load(''.join(rawinput))
+	transforms.transformTexMeta(data)
+	output = yaml.dump(data)
+
+	answer = None
+	while answer not in ['','y','n']:
+		answer = input('Overwrite {0}? [y/N] '.format(filename))
+
+	if answer == 'y':
+		with open(filename, 'w') as fp:
+			fp.write(output)
 
 
 if __name__ == '__main__':
