@@ -1,12 +1,31 @@
-import sys, yaml
-import matfile
+import sys, yaml, glob
+from pathlib import Path
+import transforms
 
 def main(args):
-	rewriteMaterial(args[-2], args[-1])
 
-def rewriteMaterial(infile, outfile):
+	root = Path(args[-1])
+	for pathname in root.glob('**/*'):
 
-	with open(infile, 'r') as fp:
+		filename = str(pathname)
+
+		if pathname.is_dir():
+			continue
+
+		elif filename.endswith('.mat'):
+			print('Material: '+filename)
+			rewriteMaterial(filename)
+		
+		elif filename.endswith('.unity'):
+			print('Scene: '+filename)
+
+		elif filename.endswith('.png.meta') or filename.endswith('.jpg.meta'):
+			print('Tex Meta: '+filename)
+
+
+def rewriteMaterial(filename):
+
+	with open(filename, 'r') as fp:
 		rawinput = fp.readlines()
 
 	data = yaml.load(''.join(rawinput))
@@ -21,7 +40,7 @@ def rewriteMaterial(infile, outfile):
 		if line[0:3] == '---':
 			break
 	
-	with open(outfile, 'w') as fp:
+	with open(filename, 'w') as fp:
 		fp.write(origHeader+newBody)
 
 
